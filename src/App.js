@@ -19,7 +19,6 @@ class App extends Component {
             newFruitProbability={0.1}
             snakeSegmentSize={10}
             tickDelay={200}
-            segmentRadius={15}
           />
         </div>
       </div>
