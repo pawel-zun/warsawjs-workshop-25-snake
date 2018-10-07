@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.2/workbox-sw.js");
 
 importScripts(
-  "/snake/precache-manifest.7d688340c025e512ea6250fc4dff6499.js"
+  "/warsawjs-workshop-25-snake/precache-manifest.5a2c468ed085d03e03e5ae2e63ee7825.js"
 );
 
 workbox.clientsClaim();
@@ -28,7 +28,7 @@ self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerNavigationRoute("/snake/index.html", {
+workbox.routing.registerNavigationRoute("/warsawjs-workshop-25-snake/index.html", {
   
   blacklist: [/^\/_/,/\/[^\/]+\.[^\/]+$/],
 });
