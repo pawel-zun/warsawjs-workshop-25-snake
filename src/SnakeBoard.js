@@ -10,19 +10,29 @@ class SnakeBoard extends Component {
     this.state = {
       fruits: [],
       running: true,
-      snakeDirection: [-1, 0],
+      snakeDirection: [1, 0],
       snakeGrowth: 0,
-      snakeSegments: [
-        {x: this.props.width / 2, y: this.props.height / 2},
-        {x: this.props.width / 2 + 10, y: this.props.height / 2}
-      ]
+      snakeSegments: []
     }
-
   }
 
   componentDidMount() {
+    this.setState({ snakeSegments: this.getInitialSnake() })
     document.addEventListener('keydown', this.changeDirection)
     this.tick()
+  }
+
+  getInitialSnake() {
+    const snakeSegments = []
+    for (let i = 0; i < this.props.initialSnakeSize; i++) {
+      const segment = {
+        x: this.props.width / 2 - this.props.snakeSegmentSize * i,
+        y: this.props.height / 2,
+        size: this.props.snakeSegmentSize
+      }
+      snakeSegments.push(segment)
+    }
+    return snakeSegments
   }
 
   changeDirection = key => {
@@ -56,11 +66,16 @@ class SnakeBoard extends Component {
   moveSnake = () => {
     const snakeSegments = [
       {
+        ...this.state.snakeSegments[0],
         x: (this.state.snakeSegments[0].x + this.state.snakeDirection[0] * this.props.snakeSegmentSize + this.props.width) % this.props.width,
         y: (this.state.snakeSegments[0].y + this.state.snakeDirection[1] * this.props.snakeSegmentSize + this.props.height) % this.props.height
-      }, ...this.state.snakeSegments.slice(0, -1)
+      }
     ]
-    return snakeSegments
+    if (this.state.snakeGrowth) {
+      return snakeSegments.concat(this.state.snakeSegments)
+    } else {
+      return snakeSegments.concat(this.state.snakeSegments.slice(0, -1))
+    }
   }
 
   appendFruit = () => {
@@ -70,6 +85,7 @@ class SnakeBoard extends Component {
       const fruit = {
         x: this.props.width * Math.random(),
         y: this.props.height * Math.random(),
+        size: this.props.fruitSize,
         age: 0
       }
       fruits.push(fruit)
@@ -85,10 +101,23 @@ class SnakeBoard extends Component {
     return fruitsWithoutExpired
   }
 
+  doItemsCollide = (a, b) => {
+  const minRequiredDistance = (a.size / 2) + (b.size / 2)
+
+  return (
+    Math.abs(a.x - b.x) < minRequiredDistance
+    && Math.abs(a.y - b.y) < minRequiredDistance
+  )}
+
+  hasCollision = item => {
+    return this.state.snakeSegments.some(segment => this.doItemsCollide(item, segment))
+  }
+
   handleGameState = () => {
     this.setState({
       snakeSegments: this.moveSnake(),
-      fruits: this.appendFruit()
+      fruits: this.appendFruit().filter(fruit => !this.hasCollision(fruit)),
+      snakeGrowth: !!this.appendFruit().filter(fruit => this.hasCollision(fruit)).length
     })
   }
 

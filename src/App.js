@@ -14,11 +14,12 @@ class App extends Component {
           <SnakeBoard
             width={320}
             height={240}
-            fruitExpiration={40}
+            fruitExpiration={100}
             fruitSize={18}
             newFruitProbability={0.1}
             snakeSegmentSize={10}
             tickDelay={200}
+            initialSnakeSize={6}
           />
         </div>
       </div>
