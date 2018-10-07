@@ -114,11 +114,20 @@ class SnakeBoard extends Component {
   }
 
   handleGameState = () => {
+    if (!this.state.running) {
+      this.stopGame()
+      return
+    }
     this.setState({
       snakeSegments: this.moveSnake(),
       fruits: this.appendFruit().filter(fruit => !this.hasCollision(fruit)),
-      snakeGrowth: !!this.appendFruit().filter(fruit => this.hasCollision(fruit)).length
+      snakeGrowth: !!this.appendFruit().filter(fruit => this.hasCollision(fruit)).length,
+      running: !this.hasCollision(this.moveSnake()[0])
     })
+  }
+
+  stopGame = () => {
+    clearInterval(this.tick)
   }
 
   tick = () => {
